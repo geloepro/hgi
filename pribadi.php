@@ -1,26 +1,40 @@
-
 <?php
-// FILE: update_blocker.php
+// Tentukan tipe konten sebagai JSON agar aplikasi dapat memprosesnya
+header('Content-Type: application/json');
 
-// Mencegah caching
-header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-header("Pragma: no-cache");
-header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+// --- PENTING: GANTI NILAI INI SESUAI KEBUTUHAN SIMULASI ANDA ---
+// Versi ini harus SAMA atau LEBIH RENDAH dari versi aplikasi yang ingin Anda tipu.
+$current_version = "2.66";
 
-// Mengatur Content-Type, mungkin tidak diperlukan jika kita ingin respons kosong,
-// tetapi bisa membantu jika kita ingin merespons dengan sesuatu yang formal namun gagal.
-// header('Content-Type: application/json'); // Pilihan: respons JSON
+// Tentukan apakah ada pembaruan paksa (biasanya 0=tidak, 1=ya)
+$force_update = 0;
 
-// HENTIKAN EKSEKUSI TANPA MENGIRIM DATA APAPUN
-// Ini adalah cara yang paling efektif untuk memblokir update sumber daya.
-// Game tidak akan menerima data file update, sehingga proses update akan gagal atau terhenti.
+// URL tempat aplikasi akan mengunduh file APK/Resource baru (kosongkan saja)
+$download_url = "";
 
-http_response_code(200); // Atau 204 No Content, tetapi 200 lebih sering diharapkan oleh klien.
+// Pesan pembaruan (kosongkan atau isi dengan pesan 'sudah terbaru')
+$update_message = "Aplikasi Anda sudah menggunakan versi terbaru.";
+// -------------------------------------------------------------
 
-// Hentikan skrip.
-die();
 
-// Jika game mengharapkan file update biner/ZIP, respons ini akan menyebabkan kegagalan unduh.
+// Membuat array data respons
+$response_data = array(
+    // Kunci 'versionCode' atau 'version' adalah yang paling penting.
+    // Sesuaikan nama kuncinya jika aplikasi Anda menggunakan nama yang berbeda.
+    "version" => $current_version,
+    "force" => $force_update,
+    "url" => $download_url,
+    "msg" => $update_message,
+    // Tambahkan kunci lain yang mungkin diminta atau dikembalikan oleh server asli
+    "status" => 1, // 1=sukses, 0=gagal (biasanya)
+    "time" => time() // Stempel waktu saat ini
+);
+
+// Mengubah array menjadi format JSON dan mencetaknya
+echo json_encode($response_data);
+
+// Akhiri skrip
+exit;
 
 ?>
 
